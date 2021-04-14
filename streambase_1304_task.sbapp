@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modify version="10.4.3_a45545bc0fa864b6dd457e084eb653f6e2004e05">
+    <add>
+        <annotations>
+            <annotation name="hygienic"/>
+        </annotations>
+        <type-metadata>
+            <param name="type" value="module"/>
+            <param name="fully-qualified-name" value="com.example.streambase_1304_task.streambase_1304_task"/>
+        </type-metadata>
+        <memory-model-settings/>
+        <implements module-reference="com.example.streambase_1304_task.task_1304"/>
+        <import from="com.example.streambase_1304_task.task_1304"/>
+        <parameter-definitions>
+            <parameter default="'acer_12345_14'" name="computer"/>
+            <parameter default="'company'" name="idcard"/>
+        </parameter-definitions>
+        <dynamic-variables>
+            <dynamic-variable initial-expression="string()" name="case" setter-expression="'salary'" setter-stream="OutputStream2"/>
+            <dynamic-variable initial-expression="string()" name="city" setter-expression="'pune'" setter-stream="OutputStream2"/>
+            <dynamic-variable initial-expression="string()" name="odc" setter-expression="department" setter-stream="OutputStream"/>
+            <dynamic-variable initial-expression="string()" name="project" setter-expression="employeeid" setter-stream="OutputStream"/>
+        </dynamic-variables>
+        <stream name="InputStream" schema="employee"/>
+        <box name="Split" type="split">
+            <input port="1" stream="InputStream"/>
+            <output port="1" stream="OutputStream"/>
+            <output port="2" stream="out:Split_2"/>
+            <param name="output-count" value="2"/>
+        </box>
+        <output-stream name="OutputStream"/>
+        <box name="Map" type="map">
+            <input port="1" stream="out:Split_2"/>
+            <output port="1" stream="out:Map_1"/>
+            <target-list>
+                <item name="input" selection="all"/>
+                <expressions>
+                    <include field="project">project</include>
+                    <include field="computer">${computer}</include>
+                </expressions>
+            </target-list>
+        </box>
+        <box name="Split2" type="split">
+            <input port="1" stream="out:Map_1"/>
+            <output port="1" stream="OutputStream2"/>
+            <output port="2" stream="out:Split2_2"/>
+            <param name="output-count" value="2"/>
+        </box>
+        <output-stream name="OutputStream2"/>
+        <box name="Map2" type="map">
+            <input port="1" stream="out:Split2_2"/>
+            <output port="1" stream="OutputStream3"/>
+            <target-list>
+                <item name="input" selection="none"/>
+                <expressions>
+                    <include field="city">city</include>
+                    <include field="case">'salary'</include>
+                </expressions>
+            </target-list>
+        </box>
+        <output-stream name="OutputStream3"/>
+    </add>
+</modify>
