@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modify version="10.4.3_a45545bc0fa864b6dd457e084eb653f6e2004e05">
+    <add>
+        <annotations>
+            <annotation name="hygienic"/>
+        </annotations>
+        <type-metadata>
+            <param name="type" value="module"/>
+            <param name="fully-qualified-name" value="com.example.streambase_learning_14.lrn1404"/>
+        </type-metadata>
+        <memory-model-settings/>
+        <parameter-definitions>
+            <parameter default="'all_subject'" name="subject"/>
+            <parameter default="'number'" name="roll_no"/>
+        </parameter-definitions>
+        <dynamic-variables>
+            <dynamic-variable initial-expression="int()" name="s_maths" setter-expression="subject.maths" setter-stream="OutputStream"/>
+        </dynamic-variables>
+        <stream name="learning">
+            <schema>
+                <field name="maths" type="int"/>
+                <field name="science" type="string"/>
+                <field name="sst" type="string"/>
+                <field name="english" type="string"/>
+            </schema>
+        </stream>
+        <box name="Map" type="map">
+            <input port="1" stream="learning"/>
+            <output port="1" stream="out:Map_1"/>
+            <target-list>
+                <item name="input" selection="none"/>
+                <expressions>
+                    <include field="subject.maths">input1.maths</include>
+                    <include field="subject.science">input1.science</include>
+                    <include field="litrecture.sst">input1.sst</include>
+                    <include field="litrecture.english">${subject}</include>
+                </expressions>
+            </target-list>
+        </box>
+        <box name="Split" type="split">
+            <input port="1" stream="out:Map_1"/>
+            <output port="1" stream="OutputStream"/>
+            <output port="2" stream="out:Split_2"/>
+            <param name="output-count" value="2"/>
+        </box>
+        <output-stream name="OutputStream"/>
+        <box name="Map2" type="map">
+            <input port="1" stream="out:Split_2"/>
+            <output port="1" stream="OutputStream2"/>
+            <target-list>
+                <item name="input" selection="none"/>
+                <expressions>
+                    <include field="abc">s_maths</include>
+                </expressions>
+            </target-list>
+        </box>
+        <output-stream name="OutputStream2"/>
+    </add>
+</modify>
